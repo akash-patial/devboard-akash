@@ -1,1 +1,6 @@
-fkjhf
+# Keep the build context small and reproducible — npm ci rebuilds these.
+node_modules
+dist
+.git
+.DS_Store
+*.local
