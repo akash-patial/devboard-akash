@@ -19,8 +19,8 @@ jobs:
      - name: Build and push Docker image
        uses: docker/build-push-action@v7
        with:
-          context: ./frontend/src
-          file: ./frontend/src/Dockerfile
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/devobard-fe-master:latest
 
