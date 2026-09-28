@@ -22,8 +22,8 @@ jobs:
               run: npm install
 
             - name: Run Linter
-              uses: npm run lint
+              run : npm run lint
 
             - name: Run test
-              uses: npm run test
+              run: npm run test
              
