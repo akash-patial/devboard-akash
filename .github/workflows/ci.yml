@@ -5,7 +5,7 @@ on:
        branches: [main]
 
 jobs:
-    frontend:
+    lint-frontend:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
@@ -30,21 +30,8 @@ jobs:
               run: npm run test
               working-directory: frontend
 
-            - name: Docker Setup login
-              uses: docker/login-action@v4
-              with:
-                    username: ${{ vars.DOCKERHUB_USERNAME }}
-                    password: ${{ secrets.DOCKERHUB_TOKEN }}
-                    
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v7
-              with:
-                    context: ./frontend
-                    file: ./frontend/Dockerfile
-                    push: true
-                    tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-frontend:latest
-
-    backend:
+          
+    lint-backend:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
@@ -70,21 +57,31 @@ jobs:
             run: go test
             working-directory: backend
 
-          - name: Docker Setup login
-            uses: docker/login-action@v4
-            with:
-                    username: ${{ vars.DOCKERHUB_USERNAME }}
-                    password: ${{ secrets.DOCKERHUB_TOKEN }}
+    build-and-push:
+        needs: [lint-frontend, lint-backend]
+        runs-on: ubuntu-latest
+        strategy:
+         matrix:
+          folder: ['frontend','backend']
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Docker Setup login
+              uses: docker/login-action@v4
+              with:
+                   username: ${{ vars.DOCKERHUB_USERNAME }}
+                   password: ${{ secrets.DOCKERHUB_TOKEN }}
                     
-          - name: Build and push Docker image
-            uses: docker/build-push-action@v7
-            with:
-                    context: ./backend
-                    file: ./backend/Dockerfile
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v7
+              with:
+                    context: ./${{matrix.folder}} 
                     push: true
-                    tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-backend:latest
+                    tags: ${{ vars.DOCKERHUB_USERNAME }}/${{matrix.folder}}:latest
+
     deploy:
-      needs: [frontend,backend]
+      needs: [lint-frontend,lint-backend, build-and-push]
       uses: ./.github/workflows/cd.yml
       secrets: inherit
 
