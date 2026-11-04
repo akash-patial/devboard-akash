@@ -28,7 +28,7 @@ jobs:
 
             - name: Docker Build ${{matrix.folders}}
               uses: docker build -t "${{ vars.DOCKERHUB_USERNAME }}/devboard-${{ matrix.folders }}:latest" .
-              working-directory: ${{ matrix.folders }}
+              working-directory: ${{ matrix.folders }}/Dockerfile
 
             - name: Run Trivy vulnerability scanner
               uses: aquasecurity/trivy-action@0.33.1
