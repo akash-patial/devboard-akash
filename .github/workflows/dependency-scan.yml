@@ -41,7 +41,7 @@ jobs:
 
 
             - name: Run Dependency Scan for Node
-              run: npm audit
+              run: npm audit fix --force
               working-directory: frontend
 
 
