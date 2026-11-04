@@ -17,10 +17,7 @@ jobs:
 
     docker-scan:
         uses: ./.github/workflows/docker-scan.yml
-        with:
-         dockerhub_username: ${{ vars.DOCKERHUB_USERNAME }}
-        secrets:
-         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
 
 
 
