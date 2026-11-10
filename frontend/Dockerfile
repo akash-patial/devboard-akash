@@ -5,8 +5,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Install both dependencies and devDependencies (needed for vite build)
 RUN npm install --legacy-peer-deps
+
+# Install vite explicitly if not already in package.json
+RUN npm list vite > /dev/null 2>&1 || npm install --no-save vite@8.1.0
 
 COPY . .
 
