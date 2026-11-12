@@ -19,6 +19,15 @@ jobs:
                     username: ${{ vars.DOCKERHUB_USERNAME }}
                     password: ${{ secrets.DOCKERHUB_TOKEN }}
             
+            - name: Debug Docker permissions
+              run: |
+                whoami
+                id
+                ls -l /var/run/docker.sock
+                docker context ls
+                docker version
+                docker ps
+
             - name: Deploy the containers with Docker Compose
               run: |
                docker compose pull
